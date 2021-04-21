@@ -1,0 +1,364 @@
+## Section 1: Introduction
+
+1. Introduction to Testing Library and Jest
+	No es solo una libreria es una filosofia, "opinionated", es lo que llamamos obstinado, lo que significa que la forma en que está escrita la biblioteca fomenta un cierto conjunto de prácticas y, en este caso, esas son las mejores prácticas para reaccionar en las pruebas.
+		Testea tu soft de la manera que el usuario lo usa, no como esta escrito el soft.
+			Lo que importa es si el software funciona como debería funcionar, porque el código puede cambiar, pero puede seguir comportandose igual de acuerdo a las especificaciones, entocnes los test van a seguir pasando.
+	
+	Encontra elementos por elementos de accesibilidad en vez de usar test ids, esto hace tu codigo sea realmente accesible (para los screen readers), por ende tu soft accesible.
+	
+	- Con RTL no necesitas de un browser, provee un DOM virtual para los test.
+	- Jest se ocupa de:
+		buscar los test, correrlos y determinar cuales pasan y cuales no.
+		
+	npx crea-react-app color-button
+	
+2. Create-React-App
+	npm package
+	Crea una aplicación de react con:
+		configuración
+		webpack y babel
+		web server
+		testing library
+		
+	npx create-react-app 
+		baja siempre la ultima versión de todo
+		no depende de cuando instalaste create-react-app
+			nunca la instala en tu maquina
+		viene con npm 5.2+ >
+		si queres una version mas viena de npm y no podes hacer upgrade
+			https://github.com/facebook/create-react-app siguiendo el link "instructions for older npm versions"
+			https://create-react-app.dev/
+			
+3. First Test with Testing Library
+	
+	npm test 
+		corre jest en watch mode:
+			busca por cambios desde el ultimo commit
+			solo corre los test de esos archivos
+			no hay cambios, no se testea.
+	
+	npm test a -> corre todos los test
+	npm test f -> solo failed test
+	npm test q -> para salir de watch mode
+	npm test p -> filtra un nombre de archivo por regex
+	npm test t -> filtra el nombre de un test por regex
+	
+	npm test App -> este test ya lo crea-react-app
+	
+	
+	App.test.js
+	
+	import {render, screen } from '@testing-library/react';
+	import App from './App';
+	
+	test('renders learn react link', () => {
+		render(<App/>);
+		const linkElement = screen.getByText(/learn react/i);
+		expect(linkElement).toBeInTheDocument();
+	});
+	
+	explicación:
+		render: 
+			crea un virtual dom para los argumentos JSX
+			accedes a ese virtual dom via screen global
+			* ambos vienen de la libreria 
+		screen
+			screen.getByText(/learn react/i); 
+			es case sensitive ese lo hace (i) 
+			busca un elemento en el dom mediante su texto.
+			puede ser una regex o no
+		expect 
+			hacemos assertions, o sea, causa que el test falle o sea exitoso.
+			
+	
+4. Jest and Jest-DOM Assertions
+
+	Las "afirmaciones" -assertions- determinan cuando un test pasa o falla.
+		
+	expect(linkElement).toBeInTheDocument();
+		expect: jest global, comienza la afirmación
+		argumento (linkElement): sujeto de la afirmación
+		matcher (toBeInTheDocument()): 
+			tipo de afirmación, este comparador viene del DOM de jest.
+			puede o no tener argumentos que refinan el match.
+		
+	Afirmaciones de ejemplo:
+		expect(element.textContent).toBe('hello');
+		expect(elementsArray).toHaveLenght(7);
+		
+	jest-dom  
+		es el que tiene los matchers (funciones que validan cosas) y el que corre los test.
+		viene con create-react-app
+		src/setupTest.js es importado antes de cada test, hace que los comparadores esten disponibles.
+		DOM-based matchers, son comparadores que estan en el DOM y aplican solo al virtual dom.
+			ej: toBeVisible() o toBeChecked()
+
+5. Jest: Watch Mode and How Tests Work
+	
+	Ayuda a RTL, renderizando componentes en el virtual DOM mediante el metodo render.
+	Ayuda en la busqueda del elementos ne el virtual DOM.
+	Interactua con el virtual DOM, clickeando elementos, etc.	
+	React necesita un test runner, que los busque, corra y haga afirmaciones. =  jest.
+	Es recomendado por Testing Library
+	Viene con create-react-app
+	
+	npm test corre un script npm que corre jest en watch mode.
+		watch mode busca por cambios en archivos desde el ultimo commit.
+		solo corre los test relacionados a ese test.
+		no hay cambios? no testea
+		
+		o sea, si testeaste y commiteaste, después cuando corras otra vez y si no hiciste cambios, te dice que no hay test hallados para testear porque no cambio nada desde el ultimo commit.
+		
+		git commit -am"texto" -> shorcut: add y commit
+	
+	Como funciona Jest?
+	
+		test es un metodo global, con 2 argumentos 
+		test(string descriptionDelTest, test function) 
+		el test falla si cuando pasa cualquier error al correr la funcion.
+		solo fallan cuando el except falla.
+		un test vacio, es un test que pasa :) porque no hay error.
+	
+		ej:
+		test('renders learn react link', () => {
+		
+		});
+		
+6. TDD: Test Driven Development
+
+	Escribir los test antes de escribir codigo después escribis el codigo de acuerdo a las especificaciones del test, haces que el test pase.
+		También se lo llama red-green test, ya que primero falla y después funciona.
+		
+	Escribis la funcion o sea el nombre de tu componente, sin codigo
+	Escribis el test
+	Haces que falle
+	Escribis el codigo del componente 
+	Haces pasar el test.
+
+	Porque TDD?:
+	
+	 Dice que sentis una gran diferencia al escribir el test, porque lo haces parte del proceso de escribir codigo y no algo que tenes que hacer después.
+	 Es mas eficiente.
+	 Re run los test todo el tiempo y podes hacer pruebas de regresion, onda, fijarte que no rompiste nada de nada.
+
+7. React Testing Library Philosophy
+
+	Tipos de test:
+	
+		unit test:
+			testea una unidad de codigo, una funcion o componente, en isolation. (aislado)
+		
+		integration test:
+			como multiples partes funcionan juntos.
+		
+		functional test:
+			testea un función particular del soft (o sea COMPORTAMIENTO) (una una funcio´n en si, sino como funciona o que hace un input cuando escribis, por ej)
+			que el input sea rojo cuando pones info invalida, no validas codigo sino "comportamiento", o sea lo que ven los usuarios.
+		
+		acceptance / end-to-end test (e2e)
+			usa un browser y un servidor, ej cypress, selenium.
+
+8. Functional Testing vs Unit Testing
+
+	unit testing (como esta escrito el soft)
+		cuando testeas una funcion o componente, tenes que mockear las dependencias
+		+ podes determinar con precisión las fallas
+		- a veces te falla el test pero al usuario no le falla nada
+		- a veces al usuario le falla pero a vos no el test  :happy_sad_man:
+		- es mas probable a romperse por refactors.
+	
+	functional testing: tenes que incluir todo lo relevante a cada unidad testeada, se testea comportamiento.
+		+ se acerca a como interactua el usuario, o sea que si hay fallas, seguramente el usuario tambien las tenga
+		+ test mas robustos.
+		- mas dificil de debuggear, porque el test no esta tan desacoplado del codigo.
+
+9. TDD (Test Driven Development) vs BDD (Behavior Driven Development)
+
+	TDD: (Testing Driven Development)
+		como los usuarios usan la app.
+		anima a testear comportamient sobre implementacion
+		
+	BDD: (Behavior Driven Development)
+		es definido explicitamente, tienen que colaborar varios roles, desarrolladores, qa, aprtest, etc.
+		define procesos de como diferentes grupos interactuan.	
+		
+10. Testing Library and Accessibility
+	
+	Se recomienda encontrar elementos por manejadores de accesbilidad.
+	https://testing-library.com/docs/queries/about/#priority
+	https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques#roles
+	lo que recomiendan es que si es una etiqueta a, no te quedes con usar getByText, sino que uses getByRole, esto se usa así:
+		screen.getByRole('link', { name: /learn react/i});
+		en este link te dice que roles son accesibles: https://www.w3.org/TR/wai-aria/#role_definitions
+	
+	Idealmente tu app tiene que ser friendly screen readers.
+	
+## Section 2: Simple App: Color Button
+
+11. Overall Course Plan
+	
+	Focus en la sintax de RTL
+	cambiar boton, deshabilitar boton
+	introduce las interacciones de usuarios que afectan al dom, unit testing functions..
+	crear algo mas complejo y testearlo.
+	crea una segunda app para comprar helado
+		teste interacciones mas complejas de usuario y componentes.
+		mockea respuestas del servidor con Mock Service Worker.
+		teste funcionalidad asincronica.
+	
+12. Start Color Button App
+	
+	
+13. Test that Finds Button by Role and Clicks Button
+
+14. OPTIONAL React Code: Click Button to Change Color
+
+15. Manual Acceptance Testing
+
+16. Test Initial Condition of Button and Checkbox
+
+17. Introduction to Code Quizzes
+
+18. Code Quiz! Confirm Button Disable on Checkbox Check
+
+19. Code Quiz Solution: Confirm Button Disable on Checkbox Check
+
+20. Finding Checkbox with Label
+
+21. Code Quiz! Disabled Button Turns Gray
+
+22. Unit Testing Functions
+
+23. Code Quiz! Update Tests for New Color Names
+
+24. When to Unit Test
+
+25. Review: Simple App
+
+# Section 3: ESLint with Testing Library, plus Prettier
+
+26. ESLint and Prettier
+
+27. ESLint for Testing Library and Jest-DOM
+
+28. Configure ESLint in VSCode
+
+29. Configure Prettier in VSCode
+
+30. Review: ESLint and Prettier
+
+# Section 4: Sundaes On Demand: Form Review and Popover
+
+31. Introduction to Sundaes on Demand
+
+32. ESLint and Prettier Setup
+
+33. React Bootstrap Setup
+
+34. Code Organization and Introduction to SummaryForm
+
+35. Code Quiz: Checkbox Enables Button
+
+36. OPTIONAL React Code: SummaryForm Checkbox and Button
+
+37. React Bootstrap Popover and Testing Library userEvent
+
+38. Screen Query Methods
+
+39. Testing Element is Not on Page: Start Popover Tests
+
+40. OPTIONAL React Code: Popover
+
+41. "Not wrapped in act(...)" Error, Async Disappearance
+
+42. Review: Summary Form
+
+# Section 5: Simulating Server Response with Mock Service Worker
+
+43. OrderEntry Server Data Introduction
+
+44. Introduction to Mock Service Worker and Handlers
+
+45. Setting up the Mock Service Worker Server
+
+46. Tests with Mock Service Worker: Scoop Options
+
+47. OPTIONAL React Code: Options and ScoopOption Components
+
+48. Using `await findBy` to Find Elements that Populate Asynchronously
+
+49. Code Quiz! Topping Options from Server
+
+50. Error Server Response Planning
+
+51. Simulating Server Error Response in Tests
+
+52. OPTIONAL React Code: Alert Banner for Options Server Error
+
+53. Running only Selected Tests, and `waitFor`
+
+54. Review: Server Error Response and Test Debugging Tools
+
+# Section 6: Testing Components Wrapped in a Provider
+
+55. Intro to Tests for Total and Subtotals
+
+56. Entering Text Input: Subtotal Tests
+
+57. OPTIONAL React Code: OrderDetails Context
+
+58. OPTIONAL React Code: Use Context to Display Scoops Subtotal
+
+59. Adding Context to Test Setup; Test Catching Error in Code
+
+60. Creating Custom Render to Wrap in Provider By Default
+
+61. Review: Scoops Subtotal with Context
+
+62. Code Quiz! Toppings Subtotal
+
+63. OPTIONAL React Code: Toppings Checkboxes
+
+64. Code Quiz! Grand Total
+
+65. "Unmounted Component" Error
+
+66. What Should Functional Tests Catch? and Refactor
+
+# Section 7: Final Exam: Order Phases
+
+67. Introduction to Final Exam: Order Phases
+
+68. Adding a New Handler: Copy/Paste Warning!
+
+69. Debugging Tips
+
+70. OPTIONAL React Hints for Order Phase Coding
+
+71. Final Exam Solution
+
+72. OPTIONAL React Code: Order Phases
+
+73. Jest Mock Functions as Props
+
+74. Review: Final Exam, and Introduction to Optional Practice
+
+# Section 8: Optional Extra Practice
+
+75. Standard Questions for New Tests and Introduction to Exercises
+
+76. Confirm "Loading" Text
+
+77. Conditional Toppings Section on Summary Page
+
+78. Disable Order Button if No Scoops Ordered
+
+79. Red Input Box for Invalid Scoop Count
+
+80. No Scoops Subtotal Update for Invalid Scoop Count
+
+81. Server Error on Order Confirmation Page
+
+82. Congratulations and Thank You!
+
