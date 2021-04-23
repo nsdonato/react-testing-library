@@ -209,21 +209,96 @@
 	
 12. Start Color Button App
 	
+	1. Borra lo que hay en App y hace como que todavía no programo nada.
+	2. Describe los test que va a testear:
+		color inicial del boton.
+		texto inicial.
+		que cuando lo clickees cambie de color.
+	3. genera el código para testear los casos.
+		cuando usas getByRole el name es lo que esta escrito en esa etiqueta, ej <button>click me</button>
+		con toHaveStyle va a verificar que el boton sea rojo, como supuestamente debería estar inicialmente.
+	4. corre el test, y no funciona porque no hizo el código, que seria la manera correcta de hacer tdd
+	5. hace el código y ejecuta el test satisfactoriamente.
+	
+	https://github.com/testing-library/jest-dom
+	https://www.w3.org/TR/wai-aria/#role_definitions
 	
 13. Test that Finds Button by Role and Clicks Button
+	
+	Cuando no encuentra un rol te dice che, estos son los roles que tenes disponible en tu componente
+	Recomienda no copiar y pegar sino hacerlo a mano así te queda la sintaxys
+	
+	Habla de código repetido, que podemos meter mas assertios en uno mas que nada uando haces functional testing, 
+	ej verificar el estilo, lanzar un evento, verificar que este en el documento, etc...
+	
+	vuelve a hacer lo mismo, genera el test, fallan y después códifica.
+	
+	El código de ella lo va dejando acá:
+		https://github.com/bonnie/udemy-TESTING-LIBRARY/tree/master/lecture-code
 
 14. OPTIONAL React Code: Click Button to Change Color
 
+	importa useState para poder hacer el cambio de color.
+	explica que el test falla aunque parte del test esta ok, eso pasa cuando pones varios afirmaciones en una, hay que tener en cuenta eso.
+	
 15. Manual Acceptance Testing
 
-16. Test Initial Condition of Button and Checkbox
+	Probar que lo que se renderiza manualmente para verificar que
+	realmente este pasando lo mismo que se testea.
 
+16. Test Initial Condition of Button and Checkbox
+	
+	Agregó un checkbox, e hizo el test, ver código
+	
 17. Introduction to Code Quizzes
 
+	Da specificaciones y pistas para crear el test
+	Proposito:
+		Practicar lo que aprendimos
+		Reforzarlo en memoria
+		Exponer areas donde sabes las respuestas
+	Empezar con mucha orientación
+		construir el código de los examenes con poca orientación.
+
+	Vos elegis:
+		Solo hay que codear los test (testear el codigo provisto en github
+		https://github.com/bonnie/udemy-TESTING-LIBRARY/tree/master/code-quiz
+		También podes código y hacer los test
+	Recomienda hacer ambos (codear y testear)
+		Te metes mas en como codigo y test interactuan
+		Practicas debuggear test y codigo al mismo tiempo
+	Opcion de usar codigo pre escrito para:
+		aquellos con poco tiempo
+		ayudate en debuggear cuando el codigo o el test son el problema
+	
+		
 18. Code Quiz! Confirm Button Disable on Checkbox Check
-
+		
+	Agregar la funcionalidad del checkbox...
+	Cuando el checkbox es checked, el boton debería estar deshabilitado
+		Pensa como podrías hacer que el checkbox este checked en los test
+		fireEvent.click
+		2x en test: una vez deshabilitado el boton, volverlo a habilitar
+	Afirmaciones en el boton:
+		expect(button).toBeEnabled()
+		expect(button).toBeDisabled()
+	Nuevo test o usar el existente?	
+	
+	Orientación en el código de react:
+		checkbox controla al boton via boolean state
+			state determina el valor disabled al atributo del boton
+			ella recomienda llamar al estado disabled, por default false
+		onChange for checkbox
+			{(e) => setDisabled(e.target.checked)}
+		
 19. Code Quiz Solution: Confirm Button Disable on Checkbox Check
-
+	
+	* Saltear si queres hacerlo primero:
+	
+		Muestra el test checkbox disables button on first click and enables on second click!
+		Muestra que estan fallando porque no hizo el código aún
+		Lo arregla y muestra que funciona
+	
 20. Finding Checkbox with Label
 
 21. Code Quiz! Disabled Button Turns Gray
