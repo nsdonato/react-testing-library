@@ -65,7 +65,7 @@
 			* ambos vienen de la libreria 
 		screen
 			screen.getByText(/learn react/i); 
-			es case sensitive ese lo hace (i) 
+			es case sensitive sin el (i) o sea, sin usar regex
 			busca un elemento en el dom mediante su texto.
 			puede ser una regex o no
 		expect 
@@ -293,7 +293,7 @@
 		
 19. Code Quiz Solution: Confirm Button Disable on Checkbox Check
 	
-	* Saltear si queres hacerlo primero:
+	* Saltear si queres hacerlo primero, sino:
 	
 		Muestra el test checkbox disables button on first click and enables on second click!
 		Muestra que estan fallando porque no hizo el código aún
