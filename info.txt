@@ -197,7 +197,8 @@
 ## Section 2: Simple App: Color Button
 
 11. Overall Course Plan
-	
+	https://github.com/bonnie/udemy-TESTING-LIBRARY
+
 	Focus en la sintax de RTL
 	cambiar boton, deshabilitar boton
 	introduce las interacciones de usuarios que afectan al dom, unit testing functions..
@@ -301,28 +302,160 @@
 	
 20. Finding Checkbox with Label
 
+	Le va a agregar un label al checkbox, así puede encontrar otro checkbox de haber mas de uno.
+
 21. Code Quiz! Disabled Button Turns Gray
+
+	Determinar que el boton sea gris cuando este disabled
+
+	hay que usar el color "gray"
+	hay que simular como el usuario puede usar la app
+		deshabilitar el boton -> esta gris > habilitarlo el boton es rojo.
+		click en el boton para cambiar el color - disable -> boton gris
+		habilitar el boton -> azul
+	las afirmaciones deben ser al final de cada flujo.
+
+	2' muestra su solución.
 
 22. Unit Testing Functions
 
+	Funciones separadas del componente:
+		son usadas por varios componentes
+		logica compleja
+	unit test si:
+		la logica es complicada para testear con functional test.
+		muchos casos extremos, cuando solamente queres ver que funcione la función apra estos casos.
+
+
+	Dice que nuestro nuevo pedido es que los clientes esta cansados de los colores que hay y quieren otros especificos.
+
+	Hace una función nueva en App replaceCamelWithSpaces sin código, para que falle el test.
+
+	Comenta que la manera de agrupar test es con Describe
+	Exporta la función en el archivo de test.
+	Hace fallar los test, después agrega código a la función y los test funcionan.
+
 23. Code Quiz! Update Tests for New Color Names
+
+	quiere que en este test hagamos un test que chequee que el test arranque con el color MediumVioletRed, y cambie a MidnightBlue
+	Updatear los test existentes
+		espera que el comportamiento cambie
+	los test de checkbox deberían seguir funcionando, onda prueba de regresion.
+
+	1:23 da su solución.
 
 24. When to Unit Test
 
+	la función que hicimos puede cubrirse con test funcionales 
+	para funciones mas complicadas, el test unitario auyda a:
+		cubrir todo lo posible
+		determinar que causa funcional puede hacer fallar los test
+	el problema con los test funcionales:
+		son retisentes a refactors
+		puede generar problemas para detectar qué falla 
+
 25. Review: Simple App
+
+	Que aprendimos? 
+		a testear interactividad con fireEvent
+		afirmaciones con jest-dom:
+			toBeEnabled
+			toBeDisabled
+			toBeChecked
+		getByRole option { name : '' }
+		jest describe para agrupar test
+		unit testing functions
+			como probar una función 
 
 # Section 3: ESLint with Testing Library, plus Prettier
 
 26. ESLint and Prettier
 
+	ESLint es un linter
+		linter es una herramienta que analiza texto estatico y marca donde se rompe la sintaxis.
+		estatico: analiza como fue escrito, no que pasa cuadno corre 
+		mantiene el estilo de codigo consistente
+			especialmente para varios proyectos donde trabajan varias personas 
+		atrapa errores en el código
+			como usar una variable antes de estar definida
+			importar un archivo inexistente, etc..
+
+	Prettier es un formateador
+		automaticamente formatean el código, indentación, espacios..
+		ejemplo: espacios alrededor de llaves.
+
+	
+	linters 
+		formato y estilo, ej:
+		metodo preferido de afirmaciones con por ej toBeChecked
+
+	Plugin extend ESLint
+	testing library y jest-dom eslint plugins
+		fuerza mejores Practicas
+	https://github.com/testing-library/eslint-plugin-testing-library
+	https://github.com/testing-library/eslint-plugin-jest-dom
+	los plugins son customizables.
+	
 27. ESLint for Testing Library and Jest-DOM
+
+	vamos a configurar eslint, eslint ya viene con cra
+	tenemos que instalar el plugin:
+	npm install eslint-plugin-testing-library eslint-plugin-jest-dom
+
+	borra del package.json la config de eslint porque dice que es mejor tener ese tipo de configs por separado.
+
+	crea un nuevo archivo .eslintrc.json
+	agrega los plugins que queremos usar
+	testing-library y jest-dom
+	después agregar las reglas que quiere que se sigan tanto en los plugins como en otras extensiones
+	
+	react-app, react-app/jest, plugintesting-library/recommended, plugin:testing-library/react,
+	plugin:jest-dom/recommended
+
+	se pueden configurar pero ella por ahora va a usar lo recomendado.
+
+	ella usa otras reglas mas que están en el código de su sitio web.
+
+	https://github.com/testing-library/eslint-plugin-testing-library
+
+	https://github.com/testing-library/eslint-plugin-jest-dom
 
 28. Configure ESLint in VSCode
 
+	https://code.visualstudio.com/docs/getstarted/settings#_settings-file-locations
+
+	para hacer congis especificas para el proyecto actual, hay que crear una carpeta .vscode y adentro setting.json
+
+	hay que verificar de tener instalada la extension eslint
+
+	una vez que configuras, por ej, te marca los archivos en rojo que no cumplen con eslint, te fijas que te marca y sin tocar nada guardas el archivo y lo fixea solo con las recomendaciones.
+
+	y por ultimo agrega al gitignore:
+	.vscode
+	.eslintcache
+
+	también muestra en que lugar tenes que poner el settings.json si no queres hacer esto para cada proyecto yq ue aplique a todo
+
 29. Configure Prettier in VSCode
+
+	busca la extension y la installa
+	agrega la configuración a settings.json
+	y listo, cuando haces cambios en un archivo y guardas se te formatea solo
 
 30. Review: ESLint and Prettier
 
+	eslint
+		instalar los package necesarios
+		eliminar de package.json la config de eslint
+		crear el archivo de config aparte
+		instalar la extension para vscode
+		crear la carpeta vscode y el archivo settings
+		agregar a gitignore el cache de eslint y la carpeta vscode
+
+	Prettier
+		agregar la config a settings
+		instalar prettier en vscode
+		
 # Section 4: Sundaes On Demand: Form Review and Popover
 
 31. Introduction to Sundaes on Demand
