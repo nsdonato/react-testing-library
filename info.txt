@@ -455,33 +455,247 @@
 	Prettier
 		agregar la config a settings
 		instalar prettier en vscode
-		
+
 # Section 4: Sundaes On Demand: Form Review and Popover
 
 31. Introduction to Sundaes on Demand
 
+	https://github.com/bonnie/udemy-TESTING-LIBRARY/tree/master/sundae-server
+	crea  una nueva app
+	npx create-react-app sundaes-on-demand
+
+	la idea de la app es:
+		elegir un gusto de helado y agregado (onda bañado en chocolate) y subir la orden
+		los sabores y agregados, vienen del server
+		la orden es enviada al servidor
+
+	volviendo a los test:
+		va a haber mas interacciones complejas
+			multiples entradas moviendote en fases
+		mouseover popup
+			testear que el elemento desaparezca del dom
+		simulación de la respuesta del servidor
+			mockear service worker, para interceptar el llamado y responder lo mockeado
+		async updates
+			esperar cambios del dom antes de hacer una afirmación
+		global state via context
+			"no se supone que implementas detalles de implementación"
+			no se va a testear, solo estamos interesados en testear comportamiento.
+		para los test no importa si usas redux, mobx, etc...
+		la única diferencia es el setup
+			tenemos que asegurarnos que los componentes esten envueltos por el contexto
+			asegura funcionalidad
+			evita errores
+
+		muestra los mock-ups de la app y las interacciones, pasando de fase en fase al ir comprando (onda el totem del mc)
+
+		el "servidor", bajarse e instalar segun las instrucciones del README
+		https://github.com/bonnie/udemy-TESTING-LIBRARY/tree/master/sundae-server
+
+			es una api restful que corre en el puerto 3030
+			para, manda info estatica de gustos y agregados, en una app real viene de la base..
+
+			para el id de orden genera un nro random
+			el servidor no es necesario para los test
+				se va a usar mock-service-worker para mockear los Response
+
+
 32. ESLint and Prettier Setup
 
+	https://github.com/bonnie/udemy-TESTING-LIBRARY/blob/master/finished-projects/color-button/.eslintrc.json
+	https://github.com/bonnie/udemy-TESTING-LIBRARY/blob/master/finished-projects/color-button/.vscode/settings.json
+
+	hay que hacer todos los pasos anteriores, instalar los plugins sacar del package json lo de eslint, etc:
+		1. instalar los plugins
+			npm install eslint-plugin-testing-library eslint-plugin-jest-dom
+		2. eliminar del package.json la config de eslint
+		3. crear el archivo .eslintrc.json con la config:
+			{
+				"plugins": ["testing-library", "jest-dom"],
+				"extends": [
+				"react-app",
+				"react-app/jest",
+				"plugin:testing-library/recommended",
+				"plugin:testing-library/react",
+				"plugin:jest-dom/recommended"
+				]
+			}
+		4. agregar en gitignore:
+			.eslintcache
+			.vscode
+		5. crear la carpeta .vscode en la raiz y el archivo settings.json con la config:
+			{
+				"eslint.options": {
+					"configFile": ".eslintrc.json"
+				},
+				"eslint.validate": ["javascript", "javascriptreact"],
+				"editor.codeActionsOnSave": {
+					"source.fixAll.eslint": true
+				},
+				"editor.defaultFormatter": "esbenp.prettier-vscode",
+				"editor.formatOnSave": true
+			}
+		
+		6. Probar que en App.test funcione esto (es para probar que se formatee bien y demás)
+			expect(linkElement).ToHaveAttributte('checked');
+
+			import {useEffect} from 'react'
+
 33. React Bootstrap Setup
+	en el curso se va a usar react bootstrap
+		podes usar cualquier estilizador que vos quieras
+	instalarlo:
+		npm install react-bootstrap bootstrap
+	agregar js en index.html
+
+	De este link, se roba lo que va en index.html
+		https://react-bootstrap.netlify.app/getting-started/introduction/#browser-globals
+	
+	De este link se roba lo que va en index.js para importar bootstrap
+		https://react-bootstrap.netlify.app/getting-started/introduction/#css
+
+	Una vez que termina solo hace un commit del archivo eslintrc (ni idea porque solo de ese..)
 
 34. Code Organization and Introduction to SummaryForm
 
+	Va a hacer el formulario de resumen y los test para las apariciones y desapariciones de los elementos en el dom
+
+	las cosas que se van a testear en este formulario:
+		buttons / checkbox
+		popover de terminos y condiciones
+			lo que hay que testear es que no este mas en la pagina
+	después:
+		test y código del resumen
+		test y código de la funcionalidad del boton
+
+
+	Organización del código por paginas
+		cada pagina tendra su test
+		jest va a encontrar los test y va a correr cualquiera que termine en .test.js
+	src/pages/summary
+		OrderSummary.jsx
+		SummaryForm.jsx
+	src/pages/summary/test
+		SummaryForm.test.jsx
+
 35. Code Quiz: Checkbox Enables Button
 
+	https://github.com/bonnie/udemy-TESTING-LIBRARY/tree/master/code-quiz
+	https://github.com/testing-library/jest-dom
+	https://testing-library.com/docs/react-testing-library/cheatsheet/
+
+	Escribir test para asegurarnos de:
+		checkbox esta destildado por default
+		checkear que el checbkox habilita el boton
+		destiladar el checkbox y deshabilitar el boton
+	una chance de configurar tu propio archivo de test desde 0
+		usar test ya hechos como modelo
+		renderizar el componente <SummaryForm>
+	Buscar el checkbox y el boton usando la opción { name }
+		usar mockup para name options values
+	checkear que los test fallen, siemper es red-green testing
+
+	tratar de no hacer copy/paste
+		recordar usar los materiales que fue pasando los links
+	si aún así lo haces, recomienda tipearlo no copiarlo, asi´queda
+
+	no es necesario escribir el código del componente para que pase el test
+		esto lo vas a hacer en la proxima lectura con ella
+		tampoco espera que sepas react-bootstrap
+
+	te hace pausar el video e intentarlo, después empieza a dar la solucion 3:13
+		
 36. OPTIONAL React Code: SummaryForm Checkbox and Button
+
+	muestra el código que hizo para el componente
 
 37. React Bootstrap Popover and Testing Library userEvent
 
+	https://github.com/testing-library/user-event
+
+	se fija como funciona el popover de boostrap para saber como testear, por ej, cuando pasas con el mouse esta, pero cuando sacas de encima se elimina del dom, n oes que lo ponen hidden
+
+	fireEvent
+
+	hay que instalar:
+		npm install @testing-library/user-event @testing-library/dom
+	
+	esta recomendado usar userEvent sobre fireEvent, porque tiene funcionas mas avanzadas
+
+	* userEvent es una biblioteca complementaria
+
+	modifica los fireEvent por userEvent
+	arranca con el nuevo test para el popover
+	lo sigue en el proximo.
+
 38. Screen Query Methods
+
+	command[All]ByQueryType
+
+	command
+		get: espera que el elemento este en el DOM
+		query: espera que el elemento no este en el dom
+		find: espera que el elemento aparezca asincronicamente
+
+	[All]
+		(exluir) espera un solo match
+		(incluido) espera mas de un match
+
+	QueryType
+		Role (mas usado)
+		AltText (imagenes)
+		Text (display elements)
+		Form elements:
+			PlaceholderText
+			LabelText
+			DisplayValue
+	
+	Referencias:
+		https://testing-library.com/docs/queries/about/#priority
+		https://testing-library.com/docs/react-testing-library/cheatsheet/
+		https://testing-library.com/docs/queries/about/
+
+		test id tiene que ser tu ultima opción porque los usuarios no interactuan con eso.
 
 39. Testing Element is Not on Page: Start Popover Tests
 
+	hace el código del test del popover
+	falla porque no esta hecho el popover
+
 40. OPTIONAL React Code: Popover
+
+	hace el código en SummaryForm
+	https://react-bootstrap.netlify.app/components/overlays/#popovers
 
 41. "Not wrapped in act(...)" Error, Async Disappearance
 
+	react actualiza el elemento despues de que termina el test
+	no seguir ese aviso
+		testing library ya hace eso por nosotros
+
+	https://testing-library.com/docs/guide-disappearance/
+	https://kentcdodds.com/blog/fix-the-not-wrapped-in-act-warning
+	https://testing-library.com/docs/preact-testing-library/api/#act
+
+	para arreglar este error:
+		que es lo que esta terminando después de que terminar el test?
+		para el cambio:
+			esperarlo
+			afirmarlo
+			mas info en el link de kentc
+
+			waitForElementToBeRemoved
+			ya usando eso se puede borrar la afirmación porque el metodo lo tiene incluido
+
 42. Review: Summary Form
 
+	flujo de los checkbox
+	mouseover para terminos y condiciones
+		userEvent.hover y unhover
+		queryByText y not.toBeInTheDocument
+		metodo asincrono waitForElementToBeRemoved
+		warning act(...)
+		
 # Section 5: Simulating Server Response with Mock Service Worker
 
 43. OrderEntry Server Data Introduction
