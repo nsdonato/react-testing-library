@@ -695,92 +695,520 @@
 		queryByText y not.toBeInTheDocument
 		metodo asincrono waitForElementToBeRemoved
 		warning act(...)
-		
+
 # Section 5: Simulating Server Response with Mock Service Worker
 
 43. OrderEntry Server Data Introduction
 
+	testear que se renderice el componente options
+	usar mock service worker
+	mockear la respuesta del servidor para /scoops y /toppings
+	    con la mina codeamos scoops y toppings va a ir como quiz
+
 44. Introduction to Mock Service Worker and Handlers
+	https://github.com/bonnie/udemy-TESTING-LIBRARY/tree/master/sundae-server
+	https://mswjs.io/docs/getting-started/mocks/rest-api
+	https://mswjs.io/
+
+	proposito:
+		interceptar las llamadas
+		retornar response especificos
+!	hay que prevenir hacer request en los test
+	configurar las condiciones usando las respuestas del servidor
+
+	npm install msw
+	crear Handlers
+	crear test server
+	asegurarnos que los test del servidor esten escuchando durante todos los test.
+		resetearlo antes de cada test.
+
+	en src crea la carpeta mocks con un archivo handlers.js
+
+	y usa la libreria que instaló.
+
+	tipo de handler puede ser rest o graphql
+		los metodos http a mockear: get, post, etc.
+		hay que poner la url entera a mockear
+			response resolver function:
+				req: request object
+				res: función que crea un response
+				ctx: utilidad para construir un response
+				https://mswjs.io/docs/basics/response-resolver
+				
+	muestra como es la api esa que nos hizo bajar, un server express que responde un json con info.
+
+	en el archivo del front de la carpeta mock: handlers.js agrega una llamada a obtener scoops, y harcodea una respuesta.
+
+	Lo sigue en la siguiente clase..
 
 45. Setting up the Mock Service Worker Server
 
+	https://mswjs.io/docs/getting-started/integrate/node
+
+	se roba un pedazo de código de la pagina de mswjs, para hacer el setup del server para los mocks
+
+	el archivo setupTest, sirve para poner código que necesitas qeu se ejecute para todos los test.
+
+	commitea lo que hizo..
+
 46. Tests with Mock Service Worker: Scoop Options
+
+	en pages cre la carpeta entry y test, agrega los componentes ScoopOption y Options y crea los test en base a la respuesta mockeada que generó antes.
+	
+	por el momento e nlos componentes solo retorna un div
+
+	explica que el componente options tiene que hacer el llamado al servidor, pero que igual en el test esto va a ser interceptado por service workeer y le va a retornar lo mockeado.
 
 47. OPTIONAL React Code: Options and ScoopOption Components
 
+	instala axios
+	npm install axios
+
+	se pone a hacer el código de ScoopOption y de Options.
+
+!   El atributo alt de img es necesario para los test, aparte de para accesibilidad
+
 48. Using `await findBy` to Find Elements that Populate Asynchronously
+
+	siempre cuando estas esperando que algo aparezca asincronicamente en la pagina, NECESITAS usar await findBy 
+
+	por ej, cambio getByRole por findAllByRole e hizo asincronico el test y awaiteo esa respuesta 
 
 49. Code Quiz! Topping Options from Server
 
+	usar scoops como modelo
+		tipear antes de copipastear
+	agregar handler para /toppings route
+	el handler puede retornar 3 opciones (ver su ejemplo)
+	escribir los test en options.test.jsx
+	name option puede ser /topping$/i
+	actualizar options.jsx y crear toppingOption.jsx
+
+	pausa y a hacer el test. su solucion 4:53'
+
 50. Error Server Response Planning
+
+	hay que actualizar el catch que dejó sin código
+	mostrar un error con el componente de bootstrap alert cuando axios da un error
+	https://react-bootstrap.github.io/components/alerts/
+	role: alert
+
+	por defecto los handlers no retornan un error en el response.
+		hay que sobreescribir para ciertos test, esto con un error..
+
+	Jest debugging Tools
+		correr solo un test
+		correr solo un test dentro de un archivo
+
+	para poder debugear algo
+		va a escribir codigo que no pase.
 
 51. Simulating Server Error Response in Tests
 
+	sobreescribe los request, seteandole statusCode 500 en los response, hace el test para que falle y en la proxima clase hace el código de OrderEntry y le agrega el alert de bootstrap
+
 52. OPTIONAL React Code: Alert Banner for Options Server Error
+
+	hace un componente para meter el alert de bootstrap y custmoizarlo, y donde esta la llamada de axios agrega el alert si hay un error
+
+	cuando corre el test, le dice que no encuentra un elemento con role alert aun cuando en la pantalla se ve claramente que esta, en el proximo video muestra como ver el tema.
 
 53. Running only Selected Tests, and `waitFor`
 
+	si queresmos correr solo un test, podemos usar test.only
+	podríamos usar test.skip, pero si tenes mas de un test es engorroso..
+
+	bueno el tema era que como detecta una vez el alert, ya sigue y falla el lenght porque solamente espera a 1, entonces tiene que cambiar el código del test 
+
+	en vez de usar el alert con la propiedad name:
+
+	await waitFor(async () => {
+		const alerts = await screen.findAllByRole('alert')
+		expect(alerts).toHaveLenght(2)
+	})
+
+	y listo
+
 54. Review: Server Error Response and Test Debugging Tools
 
+	override MSW response para test individuales
+	vimos porque no encontraba el role="alert"
+	vimos como correr un solo archivo con p en jest watch mode
+	test.only y test.skip
+	waitFor cuando await findBy no es suficiente
+	
 # Section 6: Testing Components Wrapped in a Provider
 
 55. Intro to Tests for Total and Subtotals
 
+	totales y subtotales, se van a guardar en react context
+	
 56. Entering Text Input: Subtotal Tests
 
+	crea los test para los componentes totalUpdates 
+
+	dice que siempre antes de testear un input hay que limpiarlo 
+		userEvent.clear(input)
+
+	después "escribimos"
+		userEvent.type(input, '1')
+
+	.toHaveTextContent('1')
+
+	https://github.com/testing-library/user-event
+	https://testing-library.com/docs/queries/bytext/
+
 57. OPTIONAL React Code: OrderDetails Context
+	https://kentcdodds.com/blog/application-state-management-with-react/
+
+	25' dura codeando el context, dice que en este video va a haber mucho codigo quizas un poco complicado..
+		facil de perderse en los detalles
+	que hay que hacer foco en el curso y los test
+	es una app complicada para tener escenarios realistas
+	sentite libre de dejar esta y seguir con otra
 
 58. OPTIONAL React Code: Use Context to Display Scoops Subtotal
 
+	agrega al código el context donde lo necesita.
+
 59. Adding Context to Test Setup; Test Catching Error in Code
+
+	agregar context a los test
+	crea una función para formatear la moneda que era un error que tiraban los test, etc..
 
 60. Creating Custom Render to Wrap in Provider By Default
 
+	crea una carpeta test-utils y un archivo testing-Library
+	y hace un customRender para reutilizar desde cualquier test
+
+	https://testing-library.com/docs/react-testing-library/setup/#custom-render
+
 61. Review: Scoops Subtotal with Context
+
+	getByText para encontrar el totales
+		exact option set to false
+	number inputs
+		await and findBy (porque es asincrono)
+		spinbutton role 
+		userEvent.clear para limpiar el texto existente
+		userEvent.type para escribir 
+	opción wrapper para render así applicar context Provider
+	Redefine testing library render para acceder universalmente 
 
 62. Code Quiz! Toppings Subtotal
 
+	escribir los test para el subtotal de los toppings
+	no es facil, se ponen un monton de conceptos juntos acá
+		se paciente, y mira el ejemplo de scoops
+	los test pueden ir en src/pages/testTotalUpdates.test.jsx
+
+	afirmar sobre el monto default del subtotal de toppings
+	buscar y clickear uno verificar que se actualice el subtotal
+		ver src/mocks/handlers.js para la respuesta dl servidor (que toppings)
+		usar await y find para chequebox (async)
+	tildar otro box, afirmar subtotal
+		esto asegura que el código puede manejar 2 box chequeados simultaneos
+	tildar uno de los box en off y clickearlo otra vez, afirmar subtotal
+		esto es para asegurarte que el código puede manejar check y un-check
+	
+	codear para pasar los test es opcional
+		recomendar usar el código ya escrito para esto
+			no es necesario aprender react-bootstrap salvo que quieras
+		si elegis escribir el código para validar que pasen los test:
+			no tenes que hacer cambios en options.jsx
+				la logica para contar items y calcular subotal ya esta escrita en options.jsx
+				se puede reutilizar sin cambios para toppings.
+			llamar updateItemCount con 1 checkbox on o 0 checbkox off
+			actualizar ToppingOption.jsx para incluir nombres y checkbox
+				onChange handler
+				usar checbkox from OrderSummary.jsx como modelo
+	
+	a partir de 1:25' esta su solución.
+
 63. OPTIONAL React Code: Toppings Checkboxes
 
+	el código para hacer pasar los test...
+	
 64. Code Quiz! Grand Total
+
+	deberíamos hacer un test de caja negra si no consideramos la implementacion.
+
+	ej:
+		primero actualizamos scoops, después toppings
+		deberíamos testear toppings antes que scoops?
+		sabemos que por implementación no debería hacer diferencia
+		los usuarios deberían poder hacer ambas cosas y nosotros poder cambiar la implementacio
+	los test de las funciones deberían ser async?
+		si, las opciones todavía necesitan ser cargadas del srevidor y mockeadas 
+		await ambos scoop y otro para toppign
+
+	como encontrar un elemento:
+		desde los mocka ups grand totl debería ser del mismo tamaño que los titulos --> h2
+			lo podemos buscar usando el role heading
+			inluir el text en name
+		note: { exact: false } (mathch parcial) no es una opción para byRole 
+			si usar byRole y expresiones regulares para name 
+			screen.getByRole('heading', {name: /grand total: \$/i})
+			alternativa: byText y { exact: false } y no usas expresiones regulares.
+
+
+	se pone a hacer los encabezados de todos los test que habría que hacer para grand total
+	
+	8:13 su solución
 
 65. "Unmounted Component" Error
 
+	problema:		
+		ver primero que test esta dando el error de que no se puede actualizar el estado de un componente desmontado o sea, se siguen realizando acciones cuadno termina el test. lo de act pasa por lo mismo
+
+		en el test de verificar el grand total no nos importa la parte asincronica, no nos sirve entonces..
+
+	soluciones:
+		saltar el auto cleanup 
+			https://testing-library.com/docs/react-testing-library/setup/#skipping-auto-cleanup
+			no es posible en el test by test 
+		mockear useEffect para bypasear la llamada al servidor - NO RECOMENDADA
+			porque se aleja de lo que sucede en prod.
+		incluir al principio del test que afirme el cambio de estado.
+			uno de esos await va a cambiar, y pasa en la resolución de la promesa de axios.
+			no necesitamos incluir en todos los test porque solo lo necesitamos en uno y que se haga una sola vez 
+
+		y si no hay un test?
+			agregar await al final del test para evitar el error.
+			a ella no le gusta eso (???)
+
+		finalmente elimina el test con problema y agrega la linea que se probaba ahí, en otro. :shrek:
+
 66. What Should Functional Tests Catch? and Refactor
+
+	npm start, la web le quedó bastante pasable 
+
+	hay una validación que se va a ser después.
+
+	nuestros test deberían "agarrar" eso?
+		funcion test generalmente
+			testea el proceso del código y no simplemete lo estatio.
+			los elementos a testear podrían cambiar en el futuro del código
+		arte, no sciencia para saber que en incluir e nque tipo de test.
+
+	va a hacer un refactor en la función que formatea los montos.
+
+	crea una carpeta nueva utilities y pone ahí la función, va a documentar la función con jsdoc
+
+	aun moviendo la funcion y reimportandola los test siguen pasando perfectamente
 
 # Section 7: Final Exam: Order Phases
 
 67. Introduction to Final Exam: Order Phases
+	
+	App orderPhase State
+		app apsa el estado al setter: setOrderPhase a losc omponentes como props.
+	Componentes llaman a setOrderPhase para moverse a la siguiente fase.
+	 
+	 inProgress -> review -> complete
+
+	 hace una carpeta test en src y un archivo orderPhase.test.jsx
+
+	 y comenta que este es un test funcional y empieza a comentar todo lo que se va a probar en este caso feliz.
+
+	 renderizar la app
+	 agregar scoop y topping
+	 clickear en ordenar
+	 chequear  la info de symmary segun la orden 
+	aceptar termino s y condiciones 
+	confirmar la orden
+	confirmar el numero de orden en la pagina de confirmacion
+	clickear en nueva orden y confirmar pagina
+	chequear que los subtotales fueron reseteados a cierto
+	necesitamos awaitear algo para evitar errores?
 
 68. Adding a New Handler: Copy/Paste Warning!
 
+	nuevo handler
+		post order to server
+			implementación: llamar al post via useEffect ?? in OrderConfirmation
+				formatear la data enviada o no enviar nada
+				server genera un nro randmo y lo devuelve..
+		 	hacer la mimica del post para ordenar con MSW
+		cuidado con copiar y crear al crear el nuevo handler
+			no te olvides de cambiar get por post ?¡ jaja
+
+
 69. Debugging Tips
+
+	screen.debug() 
+		muestra en pantalla como se ve el DOM en ese punto del test.
+	Si estas usando getBy y falla cuando ahce la llamada del servidor u otra cosa asincronica
+		NECESITAS USAR await findBy*
+	leer el errror cuidadosamente 
+		no te intimides or un monotn de texto
+		exactamente cual afirmación esta fallando?
+		copy/paste error en google
+	probar código pre escrito para ver donde esta el problema en tus test o el codigo 
+		claramente no es una opción viable en la vida real pero sirve mientras aprendes..
+
+	Resolving Errors from Test
+		Error: 
+			unable to find role="role" 
+		Posible causa: 
+			por ej el role button no existe, (y esta), tratar de sacar la option name.
+
+		Error: 
+			Warning: An update to componente inside a test was not wrapped in act(...)
+		P causa: 
+			hay una actualización del componente después de que el test se completa, usar await findBy 
+
+		Error: 
+			Warning: Can't perform a React state update on a unmounted component. This is a no-op, but is indicates a memory leak in your application.
+
+		P causa: 
+			hay una actualización del estado del componente después de que el test se completa, usar await findBy 
+
+		Error:
+			Error: connect ECONNREFUSED 127.0.0.1
+		P causa: 
+			No hay un handler asociado a MSW con esa ruta y metodo.
+
+
+	otras opciones para debuggear (?)
+
+		copiar y pegar codigo que funcionar y comentar el tuyo
+		si funciona verificar que es diferente con el tuyo
+		ej: muestra un ejemplo de algo que le fallaba porque le estaba mandando un number cuando era un string.
+
+	seguis atascado?
+		escribi en su Q&A
+		enviarle tu repo
+		buscar atnes en q&a si no la lrespondieron ya
 
 70. OPTIONAL React Hints for Order Phase Coding
 
+	tenes que crear u nnuevo componente que es el de 
+	
+	OrderConfirmation component
+
+		state with orderNumber que arranque en nulo.
+		si orderNumber es nulo display Loading.
+		useEffect para llamar cuando se monte el componente
+		setear orderNumber con lo que responde axios.
+		dejar en error un TODO practica opcional.
+
+	react coding Hints
+		keep orderPhase in App-level state
+			pass setter to top-level page components
+			el valor de orderPhase determina cual pagina/componente hay que mostrar
+			para simplicidad, envolver todo en el context Provider
+				incluso cuando la pagina de confirmación no lo necesite.
+		botones que actualizan el estado de orderPhase en las paginas	
+			clickear el llamado al boton por props. 
+		reset context maps después de hacer clic en nueva orden
+			context necesita un array adicional item resetOrder
+
 71. Final Exam Solution
 
+	muestra su solución..
+	
 72. OPTIONAL React Code: Order Phases
+
+	muestra el código que hizo para que pasen los test
 
 73. Jest Mock Functions as Props
 
+	cuando y porque mockear jest como funcion y pasarlo como propiedad
+		agregar una prop to top level component page
+			setOrderPhase
+		otros componentes también tienen funciones como props
+			updateItemCount for the ScoopOption/ToppingOption
+			component
+		puede necesitar pasar como prop cuando renderizas en los test
+			typescript, proptypes u otros props validatoins lo requeriran
+		o la vamos a llamar en los test, pero el test no la necesita
+			testear que la cuenta de scoop es invalida si llama a updateItemCount
+
+	passing a mock as prop
+		como pasarla cuando estas renderizando un componente en los test?
+		jest.fn()
+			jest mock function
+			no hace nada
+			simplemete un placeholder para evitar errores.
+
 74. Review: Final Exam, and Introduction to Optional Practice
+
+	aprendimos tecnias para resolver problemas
+		screen.debug()
+		reading test error output cuidadosamente
+		probables causas comunes de error
+	pasar placeholder functions como prop jest.fn()
+
+	la proxima sección es opcional puramente de practica y solo se aprende .toHaveClass para revisar que clase tiene un elemento y guias para cuestionarte cuando creas un nuevo test
 
 # Section 8: Optional Extra Practice
 
 75. Standard Questions for New Tests and Introduction to Exercises
 
+	que renderizar?
+		cual es el componente mas chico que engloba los test?
+		necesitamos pasarle props?
+		necesitamos envoler al componente en un provider?
+			el provider se usa? en el componente a testear?
+		donde deberían ir os test?
+			que archivo, es necesario que agregue uno?
+		que testeo?
+			cual es el comportamiento que necesito testear?
+		como testear
+			que queries y eventos?
+		necesito await?
+			hay algo asincronico?
+
+	menciona los ejercicios de toda la sección
+
 76. Confirm "Loading" Text
 
-77. Conditional Toppings Section on Summary Page
+	confirmar que la pagina de confirmación setea en true par que se muestre el loading, mientras se esta cargando en nro de orden desde el servidor
+	update el camino feliz
+		test loading aparece y desaparece
+	ppodría usar waitForElementToBeRemoved como con terminos y condiciones
+		no es necesario porque podemos awaitear después de que desaparece loading 
+		al popover no es posible testearlo porque no aparece mas cuando desaparec
+	en este caso simplmente podemos usar la query para afirmar que loading no esta ahi
+		usar el cheat sheet como Referencias
+		https://testing-library.com/docs/react-testing-library/cheatsheet
+	no es TDD porque ya tenemos el código escrito
+		no queremos agregar esto al examen final ya se hizo demasiado.
 
+	se hace las preguntas de antes.. y muestra su solución.
+
+77. Conditional Toppings Section on Summary Page
+	
+	no mostrar toopping heading en el resumen si no eligió nada
+	similar al camino feliz test
+		nuevo test ya que la salida es diferente
+
+	se hace las preguntas de antes.. y muestra su solución.
+	
 78. Disable Order Button if No Scoops Ordered
+
+	deshabilitar el boton al menos que haya un scoop seleccionado.
+
+	se hace las preguntas de antes.. y muestra su solución.
 
 79. Red Input Box for Invalid Scoop Count
 
+	validar el valor ingresado en cada scoop porque al ser un number pueden poner nro negativo
+	chequea cual es la clase que le pone bootstrap para cuando es invalido un input y después la usa en el test .is-invalid 
+
+	se hace las preguntas de antes.. y muestra su solución.
+
 80. No Scoops Subtotal Update for Invalid Scoop Count
+
+	validar que no se actualice el subtotal cuando el nro ingresado  sea erroneo
+
+	se hace las preguntas de antes.. y muestra su solución.
 
 81. Server Error on Order Confirmation Page
 
-82. Congratulations and Thank You!
+	testear el alerta cuando hay un error de servidor
+	se hace las preguntas de antes.. y muestra su solución.
 
+82. Congratulations and Thank You!
+	 ...
