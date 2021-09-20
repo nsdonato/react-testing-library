@@ -1,19 +1,22 @@
 ## Section 1: Introduction
 
 1. Introduction to Testing Library and Jest
-	No es solo una libreria es una filosofia, "opinionated", es lo que llamamos obstinado, lo que significa que la forma en que está escrita la biblioteca fomenta un cierto conjunto de prácticas y, en este caso, esas son las mejores prácticas para reaccionar en las pruebas.
-		Testea tu soft de la manera que el usuario lo usa, no como esta escrito el soft.
-			Lo que importa es si el software funciona como debería funcionar, porque el código puede cambiar, pero puede seguir comportandose igual de acuerdo a las especificaciones, entocnes los test van a seguir pasando.
 	
-	Encontra elementos por elementos de accesibilidad en vez de usar test ids, esto hace tu codigo sea realmente accesible (para los screen readers), por ende tu soft accesible.
+	No es solo una libreria es una filosofia, "opinionated" -> obstinado, lo que significa que la forma en que está escrita la biblioteca fomenta un cierto conjunto de prácticas y, en este caso, esas son las mejores prácticas para react en las pruebas.
+		Testea tu soft de la manera que el usuario lo usa, no como esta escrito.
+			Lo que importa es si el software funciona como debería funcionar, porque el código puede cambiar, pero puede seguir comportandose igual de acuerdo a las especificaciones, entonces los test van a seguir pasando.
+	
+	La idea es encontrar elementos, por sus atributos/role de accesibilidad en vez de usar test ids (recurso idealmente a casi no utilizar), esto hace tu codigo sea realmente accesible (ej para los screen readers), por ende tu soft va a ser accesible.
 	
 	- Con RTL no necesitas de un browser, provee un DOM virtual para los test.
 	- Jest se ocupa de:
 		buscar los test, correrlos y determinar cuales pasan y cuales no.
 		
-	npx crea-react-app color-button
+	primer ejemplo donde vamos a realizar test
+		npx crea-react-app color-button 
 	
 2. Create-React-App
+
 	npm package
 	Crea una aplicación de react con:
 		configuración
@@ -45,7 +48,6 @@
 	npm test t -> filtra el nombre de un test por regex
 	
 	npm test App -> este test ya lo crea-react-app
-	
 	
 	App.test.js
 	
@@ -188,6 +190,7 @@
 	Se recomienda encontrar elementos por manejadores de accesbilidad.
 	https://testing-library.com/docs/queries/about/#priority
 	https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques#roles
+	
 	lo que recomiendan es que si es una etiqueta a, no te quedes con usar getByText, sino que uses getByRole, esto se usa así:
 		screen.getByRole('link', { name: /learn react/i});
 		en este link te dice que roles son accesibles: https://www.w3.org/TR/wai-aria/#role_definitions
@@ -199,14 +202,14 @@
 11. Overall Course Plan
 	https://github.com/bonnie/udemy-TESTING-LIBRARY
 
-	Focus en la sintax de RTL
+	Focus en la sintaxis de RTL
 	cambiar boton, deshabilitar boton
 	introduce las interacciones de usuarios que afectan al dom, unit testing functions..
 	crear algo mas complejo y testearlo.
 	crea una segunda app para comprar helado
-		teste interacciones mas complejas de usuario y componentes.
+		testear interacciones mas complejas de usuario y componentes.
 		mockea respuestas del servidor con Mock Service Worker.
-		teste funcionalidad asincronica.
+		testear funcionalidad asincronica.
 	
 12. Start Color Button App
 	
@@ -218,7 +221,7 @@
 	3. genera el código para testear los casos.
 		cuando usas getByRole el name es lo que esta escrito en esa etiqueta, ej <button>click me</button>
 		con toHaveStyle va a verificar que el boton sea rojo, como supuestamente debería estar inicialmente.
-	4. corre el test, y no funciona porque no hizo el código, que seria la manera correcta de hacer tdd
+	4. corre el test, y no funciona porque no hizo el código, que seria la manera correcta de hacer TDD
 	5. hace el código y ejecuta el test satisfactoriamente.
 	
 	https://github.com/testing-library/jest-dom
@@ -226,10 +229,10 @@
 	
 13. Test that Finds Button by Role and Clicks Button
 	
-	Cuando no encuentra un rol te dice che, estos son los roles que tenes disponible en tu componente
+	Cuando rtl no encuentra un rol te dice che, estos son los roles que tenes disponible en tu componente
 	Recomienda no copiar y pegar sino hacerlo a mano así te queda la sintaxys
 	
-	Habla de código repetido, que podemos meter mas assertios en uno mas que nada uando haces functional testing, 
+	Habla de código repetido, que podemos meter mas assertios en uno mas que nada cuando haces functional testing, 
 	ej verificar el estilo, lanzar un evento, verificar que este en el documento, etc...
 	
 	vuelve a hacer lo mismo, genera el test, fallan y después códifica.
@@ -264,9 +267,9 @@
 	Vos elegis:
 		Solo hay que codear los test (testear el codigo provisto en github
 		https://github.com/bonnie/udemy-TESTING-LIBRARY/tree/master/code-quiz
-		También podes código y hacer los test
+		También podes hacer el código y los test
 	Recomienda hacer ambos (codear y testear)
-		Te metes mas en como codigo y test interactuan
+		Te metes mas en como el codigo y los test interactuan
 		Practicas debuggear test y codigo al mismo tiempo
 	Opcion de usar codigo pre escrito para:
 		aquellos con poco tiempo
@@ -409,9 +412,12 @@
 	testing-library y jest-dom
 	después agregar las reglas que quiere que se sigan tanto en los plugins como en otras extensiones
 	
-	react-app, react-app/jest, plugintesting-library/recommended, plugin:testing-library/react,
+	react-app, 
+	react-app/jest, 
+	plugin:testing-library/react,
 	plugin:jest-dom/recommended
-
+	plugin:testing-library/dom
+	
 	se pueden configurar pero ella por ahora va a usar lo recomendado.
 
 	ella usa otras reglas mas que están en el código de su sitio web.
@@ -515,7 +521,7 @@
 				"extends": [
 				"react-app",
 				"react-app/jest",
-				"plugin:testing-library/recommended",
+				"extends": ["plugin:testing-library/dom"]
 				"plugin:testing-library/react",
 				"plugin:jest-dom/recommended"
 				]
